@@ -1,0 +1,23 @@
+{
+  "name": "keytool",
+  "version": "1.0.0",
+  "description": "A tool for generating a base64-encoded protocol-buffer-packed public key from an IPFS secret key.",
+  "main": "keytool.js",
+  "scripts": {
+    "start": "./make_key.sh",
+    "test": "./test_key.sh"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/alfl/keytool.git"
+  },
+  "author": "Kubelt.com",
+  "license": "SEE LICENSE IN LICENSE.md",
+  "bugs": {
+    "url": "https://github.com/alfl/keytool/issues"
+  },
+  "homepage": "https://github.com/alfl/keytool#readme",
+  "dependencies": {
+    "libp2p-crypto": "^0.21.2"
+  }
+}
