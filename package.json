@@ -18,6 +18,7 @@
   },
   "homepage": "https://github.com/alfl/keytool#readme",
   "dependencies": {
+    "jose": "^4.6.0",
     "libp2p-crypto": "^0.21.2"
   }
 }
