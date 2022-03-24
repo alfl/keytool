@@ -1,32 +1,51 @@
-const crypto = require('libp2p-crypto')
+const crypto = require('crypto')
+const jose = require('jose')
 
-async function validate_pub_key(raw_sec_key, b64_pub_key, test_mode) {
-    // Decode and unpack the public key.
-    const pbf_pub_key = Buffer.from(b64_pub_key, 'base64')
-    const raw_pub_key = await crypto.keys.unmarshalPublicKey(pbf_pub_key)
+async function validate_keys(baseSK, basePK) {
+    const test_msg = 'this is only a test'
 
-    // Sign something with the private key.
-    const plaintext = crypto.randomBytes(512)
-    const sig = await raw_sec_key.sign(plaintext)
-    const pub_key_is_valid = await raw_pub_key.verify(plaintext, sig)
+    const buffSK = Buffer.from(baseSK, 'base64')
+    const jsonSK = JSON.parse(buffSK)
+    const skey = await jose.importJWK(jsonSK, 'ES256')
 
-    return (!test_mode && pub_key_is_valid)
+    const sign = crypto.createSign('SHA256')
+    sign.write(test_msg)
+    sign.end()
+
+    const sig = sign.sign(skey, 'base64')
+
+    const buffPK = Buffer.from(basePK, 'base64')
+    const jsonPK = JSON.parse(buffPK)
+    const pkey = await jose.importJWK(jsonPK, 'ES256')
+
+    const verify = crypto.createVerify('SHA256')
+    verify.write(test_msg)
+    verify.end()
+
+    return verify.verify(pkey, sig, 'base64')
 }
 
-async function start(b64_sec_key, test_mode) {
-    const algo = 'ed25519'
-    const bitwidth = 2048
-    
-    const pbf_sec_key = Buffer.from(b64_sec_key, 'base64')
-    const raw_sec_key = await crypto.keys.unmarshalPrivateKey(pbf_sec_key)
-    const raw_pub_key = raw_sec_key.public
-    const pbf_pub_key = await crypto.keys.marshalPublicKey(raw_pub_key)
-    const b64_pub_key = pbf_pub_key.toString('base64')
+async function start() {
+    const ALGO = 'ES256'
+    const EXTR = true
+    const { publicKey, privateKey } = await jose.generateKeyPair(ALGO, { extractable: EXTR })
+
+    const exportPK = await jose.exportJWK(publicKey)
+    const exportSK = await jose.exportJWK(privateKey)
+
+    const jsonPK = JSON.stringify(exportPK)
+    const jsonSK = JSON.stringify(exportSK)
+
+    const buffPK = Buffer.from(jsonPK)
+    const buffSK = Buffer.from(jsonSK)
+
+    const basePK = buffPK.toString('base64')
+    const baseSK = buffSK.toString('base64')
 
     // Test key integrity:
-    if (await validate_pub_key(raw_sec_key, b64_pub_key, test_mode)) {
-        console.log('SECRET KEY (NOT FOR SHARING)\t', b64_sec_key)
-        console.log('PUBLIC KEY (SHARE WITH KUBELT)\t', b64_pub_key)
+    if (await validate_keys(baseSK, basePK)) {
+        console.log('SECRET KEY (NOT FOR SHARING)\t', baseSK)
+        console.log('PUBLIC KEY (SHARE WITH KUBELT)\t', basePK)
         process.exit(0)
     } else {
         console.error('Public key cannot validate private key signatures!')
@@ -34,4 +53,4 @@ async function start(b64_sec_key, test_mode) {
     }
 }
 
-start(process.argv[2], process.argv[3])
+start()

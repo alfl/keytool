@@ -4,8 +4,8 @@
   "description": "A tool for generating a base64-encoded protocol-buffer-packed public key from an IPFS secret key.",
   "main": "keytool.js",
   "scripts": {
-    "start": "./make_key.sh",
-    "test": "./test_key.sh"
+    "start": "node keytool.js",
+    "test": "echo Keytool self-tests! Just do `npm start`!'"
   },
   "repository": {
     "type": "git",
@@ -18,6 +18,6 @@
   },
   "homepage": "https://github.com/alfl/keytool#readme",
   "dependencies": {
-    "libp2p-crypto": "^0.21.2"
+    "jose": "^4.6.0"
   }
 }

@@ -1,17 +1,13 @@
 # Keytool
 
-A tool for generating a base64-encoded protocol-buffer-packed public key from an IPFS secret key.
+A tool for generating base64-encoded ECDSA keys for kubelt.com.
 
 ## Example Output
 
 ```bash
-SECRET KEY (NOT FOR SHARING)	 CAESQHk2ZJ7Wte0QPkb+6INVRwZpo2FCeYbfnvfzHvMU/kwiX4z6CISXQFKp609TikAk1i/gEhTbMuD/lH9VRX2NMvY=
-PUBLIC KEY (SHARE WITH KUBELT)	 CAESIF+M+giEl0BSqetPU4pAJNYv4BIU2zLg/5R/VUV9jTL2
+SECRET KEY (NOT FOR SHARING)	 eyJrdHkiOiJFQyIsIngiOiJvSkk2MVdEMWhnOTM4Zm5DOXBtclF2aVFOSmlFVUtZTXBrdkotTUdGc01jIiwieSI6Ik1aeHB5V3Ayemk4V0pfaFd1ZGVodzJxNTlJZk44ZlhhVzBaQ3VLS0J3YVUiLCJjcnYiOiJQLTI1NiIsImQiOiJiRW9xS0lOdmo4TnZHR2JQTHJYbEJaVDluZ0VsNTViclBpTm4zNXVtdVZnIn0=
+PUBLIC KEY (SHARE WITH KUBELT)	 eyJrdHkiOiJFQyIsIngiOiJvSkk2MVdEMWhnOTM4Zm5DOXBtclF2aVFOSmlFVUtZTXBrdkotTUdGc01jIiwieSI6Ik1aeHB5V3Ayemk4V0pfaFd1ZGVodzJxNTlJZk44ZlhhVzBaQ3VLS0J3YVUiLCJjcnYiOiJQLTI1NiJ9
 ```
-
-## Prerequisites
-
-Requires an IPFS node running locally.
 
 ## Quickstart
 
@@ -22,7 +18,4 @@ npm start
 
 ## Tests
 
-```bash
-npm i
-npm test
-```
+The tool self-tests by unpacking the generated keys and attempting a signature verification with them.
